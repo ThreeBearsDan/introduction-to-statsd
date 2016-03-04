@@ -125,3 +125,5 @@ request.time.mean
 https://github.com/etsy/statsd/blob/v0.7.2/docs/metric_types.md
 
 https://github.com/etsy/statsd/wiki#client-implementations
+
+http://docs.datadoghq.com/guides/dogstatsd/#datagram-format
