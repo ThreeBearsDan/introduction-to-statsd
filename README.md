@@ -120,6 +120,12 @@ request.time.mean
 
 ### 使用标签更好的标记
 
+# 运行
+
+```
+npm run-script pipe
+```
+
 ## 参考
 
 https://github.com/etsy/statsd/blob/v0.7.2/docs/metric_types.md

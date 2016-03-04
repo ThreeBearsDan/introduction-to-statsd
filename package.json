@@ -1,0 +1,26 @@
+{
+  "name": "introduction-to-statsd",
+  "version": "1.0.0",
+  "description": "> StatsD 快速入门。阅读时间 10 分钟",
+  "main": "index.js",
+  "scripts": {
+    "statsd": "node_modules/.bin/statsd config.json",
+    "start": "node server.js",
+    "pipe": "node_modules/.bin/statsd config.json | node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wyvernnot/introduction-to-statsd.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wyvernnot/introduction-to-statsd/issues"
+  },
+  "homepage": "https://github.com/wyvernnot/introduction-to-statsd#readme",
+  "dependencies": {
+    "express": "^4.13.4",
+    "statsd": "etsy/statsd",
+    "ws": "^1.0.1"
+  }
+}

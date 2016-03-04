@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>StatsD DEMO</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            煎饼果子
+        </div>
+        <div class="panel-body">
+            <h2>计数器: counter</h2>
+
+            <label>
+                鸡蛋:
+            </label>
+            <button data-message="ingredients.egg:1|c" data-channel="line" class="btn btn-primary">+1</button>
+            <button data-message="ingredients.egg:1000|c" data-channel="line" class="btn btn-primary">+1000</button>
+
+            <label>
+                薄脆:
+            </label>
+            <button data-message="ingredients.baocui:1|c" data-channel="line" class="btn btn-primary">+1</button>
+            <button data-message="ingredients.baocui:500|c" data-channel="line" class="btn btn-primary">+500</button>
+
+            <label>
+                面:
+            </label>
+            <button data-message="ingredients.mian:1|c" data-channel="line" class="btn btn-primary">+1</button>
+            <button data-message="ingredients.mian:300|c" data-channel="line" class="btn btn-primary">+300</button>
+
+            <h2>标量: gauges</h2>
+            <label>
+                油温:(<span id="temp_text"></span>°C)
+                <input id="temperature" type="range" min="1" max="300">
+            </label>
+            <br/>
+
+            <label>
+                辣度：
+            </label>
+            <button data-message="spice.level:1|g" data-channel="line" class="btn btn-primary">1</button>
+            <button data-message="spice.level:50|g" data-channel="line" class="btn btn-primary">50</button>
+            <button data-message="spice.level:100|g" data-channel="line" class="btn btn-primary">100</button>
+
+            <h2>集合: set</h2>
+
+            <label>
+                口味:
+            </label>
+
+            <button data-message="flavor:tian|s" data-channel="line" class="btn btn-primary">甜</button>
+            <button data-message="flavor:la|s" data-channel="line" class="btn btn-primary">辣</button>
+            <button data-message="flavor:suan|s" data-channel="line" class="btn btn-primary">酸</button>
+
+            <h2>计时器: timer</h2>
+            <label>
+                耗时:
+            </label>
+            <button data-message="duration:20|ms" data-channel="line" class="btn btn-primary">20s</button>
+            <button data-message="duration:60|ms" data-channel="line" class="btn btn-primary">1min</button>
+            <button data-message="duration:300|ms" data-channel="line" class="btn btn-primary">5min</button>
+        </div>
+    </div>
+    <hr/>
+    <div>
+        <h2>StatsD调试接口: </h2>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="btn-group">
+                    <button data-message="stats" data-channel="admin" class="btn btn-default">状态</button>
+                    <button data-message="counters" data-channel="admin" class="btn btn-default">计数器</button>
+                    <button data-message="gauges" data-channel="admin" class="btn btn-default">标量</button>
+                    <button data-message="timers" data-channel="admin" class="btn btn-default">计时器</button>
+                </div>
+            </div>
+            <div class="panel-body">
+                <pre id="admin"></pre>
+            </div>
+        </div>
+
+        <h2>后端:</h2>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Console<span id="last_flush" class="pull-right"></span>
+            </div>
+            <div class="panel-body">
+                <pre id="console"></pre>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        var last_flush = 0;
+        var socket = new WebSocket(`ws://${location.host}`);
+
+        socket.addEventListener('message', function (e) {
+
+            var message = JSON.parse(e.data);
+            if (message.type == "console") {
+                last_flush = +new Date;
+                $("#console").text(message.data);
+            } else {
+                $("#admin").text($("#admin").text() + message.data);
+            }
+
+        });
+
+        $("button[data-message]").click(function () {
+            $("#admin").text("")
+            $.get($(this).data('channel'), {
+                message: $(this).data('message')
+            })
+        })
+
+        setInterval(function () {
+
+            var diff = Math.round((Date.now() - last_flush) / 1000);
+
+            if (diff < 11) {
+                $("#last_flush").text((10 - diff) + '秒');
+            }
+
+            var temp = $("#temperature").val()
+            $("#temp_text").text(temp)
+            $.get('line', {
+                message: `temp:${temp}|g`
+            })
+        }, 1000)
+    })
+</script>
+</body>
+</html>
