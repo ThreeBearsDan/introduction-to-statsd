@@ -1,7 +1,5 @@
-# Introduction to statsd
-> StatsD 快速入门。阅读时间 10 分钟
-
 # StatsD 简介
+> 介绍 StatsD 的发展，协议，最后附带有一个假想的例子。
 
 自主开发一套监控系统可以从这三个部分分别着手：数据采集，数据存储和数据展示。
 
@@ -112,7 +110,7 @@ request.time.mean
 
 'echo "online.user:9588|s" | nc 127.0.0.1 8251'
 
-## 实例
+# StatsD 实例
 
 以做一个完美的煎饼果子的过程为例，参数和类型的对应关系如下：
 
@@ -135,18 +133,23 @@ request.time.mean
 
 - 做每一个煎饼果子的时间
 
-## 运行
+## 运行代码
 
 ```
+git clone git@github.com:wyvernnot/introduction-to-statsd.git
+cd introduction-to-statsd
+npm install
 npm run-script pipe
 ```
 
+```
 http://localhost:8080
+```
 
 ## 参考
 
-https://github.com/etsy/statsd/blob/v0.7.2/docs/metric_types.md
+- https://github.com/etsy/statsd/blob/v0.7.2/docs/metric_types.md
 
-https://github.com/etsy/statsd/wiki#client-implementations
+- https://github.com/etsy/statsd/wiki#client-implementations
 
-http://docs.datadoghq.com/guides/dogstatsd/#datagram-format
+- http://docs.datadoghq.com/guides/dogstatsd/#datagram-format
